@@ -223,7 +223,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
         delete.setOnClickListener(view -> {
             binding.expTable.removeView((View) view.getParent());
 
-            if(total!=0)
+            if(total>0)
             {
 
                 total-=(price[0]*quantity[0]);
