@@ -42,11 +42,13 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
         expenseDetailsArrayList = new ArrayList<>();
         expenseList = new ExpenseList();
         expenseList.setExpList(expenseDetailsArrayList);
+        Toast.makeText(getContext(), total+" "+expenseList.getTotal()+" "+expenseDetailsArrayList.size(), Toast.LENGTH_SHORT).show();
         this.setCancelable(false);
         binding.totalBtn.setText("Total: "+String.format("%.2f",total));
 
         binding.closeBottomSheet.setOnClickListener(view -> {
             total = 0;
+           expenseList.setExpList(null);
             binding.expTable.removeAllViews();
             dismiss();
         });
@@ -94,10 +96,10 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if(editable.toString().isEmpty())
+                if(editable.toString().trim().isEmpty())
                 {
                     expenseList.getExpList().remove(expenseDetails);
-                    if(total>0 && price[0]<=total) {
+                    if(itemName[0]!=null &&itemName[0].length()!=0 && total>0 && price[0]*quantity[0]<=total) {
                         total -= (price[0] * quantity[0]);
                     }
                    price[0]=0;
@@ -106,21 +108,17 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
                     return;
 
                 }
-                if(!editable.toString().isEmpty()){
-                    if(total>0 && price[0]<=total) {
+                if(!editable.toString().trim().isEmpty()){
+                    if(itemName[0]!=null && itemName[0].length()!=0 && total>0 && price[0]*quantity[0]<=total) {
                         total -= (price[0] * quantity[0]);
                     }
-                    if(editable.toString().startsWith("."))
+                    if(editable.toString().trim().startsWith("."))
                     {
                         price[0] = Double.parseDouble(0+editable.toString());
                     }
                     else{
                         price[0] = Double.parseDouble(editable.toString());
                     }
-
-//                    details.setTotal(total);
-                    details.setQuantity(quantity[0]);
-                    details.setPrice(price[0]);
 
 
                 }
@@ -161,11 +159,13 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
                 else{
                     expenseList.getExpList().remove(expenseDetails);
                     flag[0]=true;
-                    if(total>0 && price[0]<=total) {
+
+                    if(total>0 && price[0]*quantity[0]<=total && price[0]!=0 && quantity[0]!=0) {
                         total-=(price[0]*quantity[0]);
                         calculate(itemName[0], 0, 0,expenseDetails);
                     }
                     itemName[0] = "";
+
 
                     }
 
@@ -186,9 +186,9 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
             @Override
             public void afterTextChanged(Editable editable) {
 
-                if(!editable.toString().isEmpty())
+                if(!editable.toString().trim().isEmpty())
                 {
-                    if(total>0 && quantity[0]<=total) {
+                    if(itemName[0]!=null &&itemName[0].length()!=0 && total>0 && price[0]*quantity[0]<=total) {
                         total -= (price[0] * quantity[0]);
                     }
                     quantity[0] = Double.parseDouble(editable.toString());
@@ -198,7 +198,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
                 else{
                     expenseList.getExpList().remove(expenseDetails);
 
-                    if(total>0 && quantity[0]<=total) {
+                    if(itemName[0]!=null && itemName[0].length()!=0 && total>0 && price[0]*quantity[0]<=total) {
                        total-=(price[0]*quantity[0]);
 
                     }
@@ -223,7 +223,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
         delete.setOnClickListener(view -> {
             binding.expTable.removeView((View) view.getParent());
 
-            if(total>0)
+            if(total>0 && price[0]*quantity[0]<=total)
             {
 
                 total-=(price[0]*quantity[0]);
