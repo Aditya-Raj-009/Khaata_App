@@ -29,6 +29,17 @@ public class ExpenseList {
     @ColumnInfo(name = "Description")
     private String description;
 
+    @ColumnInfo(name = "Transaction Date")
+    private String tDate;
+
+    public String getTDate() {
+        return tDate;
+    }
+
+    public void settDate(String tDate) {
+        this.tDate = tDate;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -45,11 +56,12 @@ public class ExpenseList {
         this.description = description;
     }
 
-    public ExpenseList(ArrayList<ExpenseDetails> expList, long id, double total,String title,String description) {
+    public ExpenseList(ArrayList<ExpenseDetails> expList, String tDate, long id, double total,String title,String description) {
         this.expList = expList;
         this.id = id;
         this.total = total;
         this.title = title;
+        this.tDate = tDate;
         this.description = description;
     }
 

@@ -23,7 +23,7 @@
             android:textColor="@color/golden"
             android:textAlignment="textEnd"
             android:layout_marginEnd="12dp"
-            android:id="@+id/date_timeTxt"
+            android:id="@+id/dateTxt"
             />
         <TextView
             android:layout_width="wrap_content"
@@ -31,6 +31,7 @@
             android:layout_gravity="center_horizontal"
             android:textSize="18sp"
             android:hint="Title"
+            android:id="@+id/titleTxt"
             android:textColor="@color/golden"
             android:padding="5dp"
             android:layout_marginTop="12dp"
@@ -43,12 +44,27 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:padding="5dp"
+            android:id="@+id/descTxt"
             android:textColor="@color/golden"
            android:hint="Description"
             android:textColorHint="@color/gray"
             android:maxWidth="300dp"
             android:layout_gravity="center_horizontal"
             android:height="100dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="₹ 0.00"
+            android:textColorHint="@color/gray"
+            android:textColor="@color/golden"
+            android:textStyle="bold"
+            android:textAlignment="textEnd"
+            android:layout_marginEnd="12dp"
+            android:id="@+id/totalTranTxt"
+            android:padding="5dp"
+            />
+
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 
