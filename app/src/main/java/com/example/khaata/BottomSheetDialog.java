@@ -15,7 +15,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.databinding.DataBindingUtil;
 
 import com.example.khaata.databinding.BottoSheetDialogBinding;
 import com.example.khaata.entity.ExpenseDetails;
@@ -36,7 +35,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.botto_sheet_dialog, container, false);
+        binding = BottoSheetDialogBinding.inflate(getLayoutInflater());
 
         expenseDetailsArrayList = new ArrayList<>();
         expenseList = new ExpenseList();

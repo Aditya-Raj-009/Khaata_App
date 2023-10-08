@@ -1,14 +1,7 @@
 package com.example.khaata.entity;
 
-import androidx.databinding.BaseObservable;
-import androidx.databinding.Bindable;
-import androidx.databinding.library.baseAdapters.BR;
-import androidx.room.ColumnInfo;
-import androidx.room.Entity;
-import androidx.room.Ignore;
-import androidx.room.PrimaryKey;
 
-public class ExpenseDetails extends BaseObservable {
+public class ExpenseDetails {
 
     private String itemName;
     private double quantity;
