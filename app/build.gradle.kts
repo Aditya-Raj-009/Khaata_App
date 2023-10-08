@@ -41,6 +41,9 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
     var room_version = "2.5.2"
+    var lottieVersion = "6.1.0"
+
+    implementation ("com.airbnb.android:lottie:$lottieVersion")
 
     implementation ("androidx.room:room-runtime:$room_version")
     annotationProcessor ("androidx.room:room-compiler:$room_version")
