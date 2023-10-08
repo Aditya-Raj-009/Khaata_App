@@ -67,6 +67,7 @@
                     app:hintTextColor="@color/blue"
                     android:textColorHint="#2196F3"
                     app:boxCornerRadiusBottomEnd="8dp"
+
                     app:boxCornerRadiusBottomStart="8dp"
                     app:boxCornerRadiusTopEnd="8dp"
                     app:boxCornerRadiusTopStart="8dp"
@@ -225,15 +226,15 @@
                     android:elevation="12dp"
                     />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Pay ₹ 0.0"
                     android:textStyle="bold"
                     android:id="@+id/payBtn"
                     android:textColor="@color/black"
-                    android:elevation="12dp"
-                    android:backgroundTint="@color/white"
+                    android:elevation="20dp"
+                    android:background="@drawable/button_bg"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="30dp"/>
             </androidx.appcompat.widget.LinearLayoutCompat>
