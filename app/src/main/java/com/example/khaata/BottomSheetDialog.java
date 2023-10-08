@@ -234,6 +234,8 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
 
             if(total>0 && price[0]*quantity[0]<=total)
             {
+                Toast.makeText(getContext(), expenseDetails.getPrice()+" "+expenseDetails.getQuantity()
+                        +"\n"+expenseList.getTotal()+" "+expenseList.getExpList().size(), Toast.LENGTH_SHORT).show();
 
                 total-=(price[0]*quantity[0]);
                 calculate(itemName[0],0,0,expenseDetails);
