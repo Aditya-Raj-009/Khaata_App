@@ -257,7 +257,6 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
 
         });
 
-        // Set background color and other properties for EditText fields
         iNm.setBackgroundColor(getResources().getColor(R.color.white));
         iNm.setHint("Item name");
         iNm.setPadding((int) convertDpToPx(2), (int) convertDpToPx(2), (int) convertDpToPx(2), (int) convertDpToPx(2));
