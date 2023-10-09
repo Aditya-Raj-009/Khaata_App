@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
 }
 
+
 android {
     namespace = "com.example.khaata"
     compileSdk = 33
@@ -40,8 +41,13 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
+    implementation ("dev.shreyaspatil.EasyUpiPayment:EasyUpiPayment:3.0.3")
+
+
+
     var room_version = "2.5.2"
     var lottieVersion = "6.1.0"
+
 
     implementation ("com.airbnb.android:lottie:$lottieVersion")
 
