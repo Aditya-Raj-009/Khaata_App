@@ -32,11 +32,13 @@ public class PaymentInfoActivity extends AppCompatActivity {
         snackbarLayout.addView(customSnackBarView,0);
         TextView snackBarText = customSnackBarView.findViewById(R.id.snackbar_text);
 
-        String nameEt = binding.nameEt.getText().toString().trim();
-        String VPA = binding.vpaEt.getText().toString().trim();
-        String balance = binding.balanceET.getText().toString().trim();
+
 
         binding.proceedBtn.setOnClickListener(view -> {
+            String nameEt = binding.nameEt.getText().toString().trim();
+            String VPA = binding.vpaEt.getText().toString().trim();
+            String balance = binding.balanceET.getText().toString().trim();
+
             if(nameEt.isEmpty() && VPA.isEmpty() && balance.isEmpty())
             {
                 snackBarText.setText("Please! Enter Payee Name, VPA, and Balance");
@@ -64,6 +66,7 @@ public class PaymentInfoActivity extends AppCompatActivity {
                 editor.putString("VPA",VPA);
                 editor.commit();
                 startActivity(new Intent(this,MainActivity.class));
+                finish();
             }
         });
 

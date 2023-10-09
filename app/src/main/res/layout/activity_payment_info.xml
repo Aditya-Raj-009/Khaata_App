@@ -33,7 +33,7 @@
                 app:boxCornerRadiusTopEnd="8dp"
                 app:boxCornerRadiusTopStart="8dp"
                 app:startIconDrawable="@drawable/baseline_person_24"
-                app:boxStrokeColor="#2196F3"
+                app:boxStrokeColor="@color/green"
                 app:hintAnimationEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -41,9 +41,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
-                    android:textColor="@color/black"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textColor="@color/green"
+                    android:textSize="16sp"
+                    />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -59,7 +59,7 @@
                 app:boxCornerRadiusTopEnd="8dp"
                 app:boxCornerRadiusTopStart="8dp"
                 app:startIconDrawable="@drawable/baseline_payment_24"
-                app:boxStrokeColor="#2196F3"
+                app:boxStrokeColor="@color/green"
                 app:hintAnimationEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -67,8 +67,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
-                    android:textColor="@color/black"
-                    android:textSize="18sp"
+                    android:textColor="@color/green"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -84,7 +84,7 @@
                 app:boxCornerRadiusBottomStart="8dp"
                 app:boxCornerRadiusTopEnd="8dp"
                 app:boxCornerRadiusTopStart="8dp"
-                app:boxStrokeColor="#2196F3"
+                app:boxStrokeColor="@color/green"
                 app:startIconDrawable="@drawable/baseline_currency_rupee_24"
                 app:hintAnimationEnabled="true">
 
@@ -93,8 +93,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="numberDecimal"
-                    android:textColor="@color/black"
-                    android:textSize="18sp"
+                    android:textColor="@color/green"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
             </com.google.android.material.textfield.TextInputLayout>
