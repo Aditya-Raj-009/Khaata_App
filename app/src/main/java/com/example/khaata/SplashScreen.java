@@ -23,8 +23,17 @@ public class SplashScreen extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                startActivity(new Intent(SplashScreen.this,MainActivity.class));
+                if(getSharedPreferences("PaymentInfo",MODE_PRIVATE).getString("PayeeName",null)!=null)
+                {
+                    startActivity(new Intent(SplashScreen.this,MainActivity.class));
+
+                }
+                else {
+                    startActivity(new Intent(SplashScreen.this,PaymentInfoActivity.class));
+
+                }
                 finish();
+
             }
         },3000);
     }
