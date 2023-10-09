@@ -64,6 +64,7 @@ public class PaymentInfoActivity extends AppCompatActivity {
                SharedPreferences.Editor editor = sharedPreferences.edit();
                editor.putString("PayeeName",nameEt);
                 editor.putString("VPA",VPA);
+                editor.putString("Balance",balance);
                 editor.commit();
                 startActivity(new Intent(this,MainActivity.class));
                 finish();

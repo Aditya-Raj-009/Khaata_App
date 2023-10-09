@@ -23,7 +23,9 @@ public class SplashScreen extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if(getSharedPreferences("PaymentInfo",MODE_PRIVATE).getString("PayeeName",null)!=null)
+                if(getSharedPreferences("PaymentInfo",MODE_PRIVATE).getString("VPA",null)!=null
+                && getSharedPreferences("PaymentInfo",MODE_PRIVATE).getString("PayeeName",null)!=null
+                && getSharedPreferences("PaymentInfo",MODE_PRIVATE).getString("Balance",null)!=null)
                 {
                     startActivity(new Intent(SplashScreen.this,MainActivity.class));
 
