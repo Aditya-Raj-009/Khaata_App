@@ -1,5 +1,8 @@
 package com.example.khaata;
 
+import static android.content.Context.MODE_PRIVATE;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
@@ -22,11 +25,17 @@ import com.example.khaata.entity.ExpenseList;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import dev.shreyaspatil.easyupipayment.EasyUpiPayment;
+import dev.shreyaspatil.easyupipayment.exception.AppNotFoundException;
 
 public class BottomSheetDialog extends BottomSheetDialogFragment {
     private static double total;
     private static BottoSheetDialogBinding binding;
     private static ExpenseList expenseList;
+    private static String vpa,payeeName;
     private static ArrayList<ExpenseDetails> expenseDetailsArrayList;
 
 
@@ -36,6 +45,11 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = BottoSheetDialogBinding.inflate(getLayoutInflater());
+
+        SharedPreferences preferences = getActivity().getSharedPreferences("PaymentInfo",MODE_PRIVATE);
+        payeeName = preferences.getString("PayeeName",null);
+        vpa = preferences.getString("VPA",null);
+
 
         expenseDetailsArrayList = new ArrayList<>();
         expenseList = new ExpenseList();
@@ -57,6 +71,49 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
         });
 
 
+        binding.payBtn.setOnClickListener(view -> {
+            if(vpa!=null && payeeName!=null)
+            {
+                if(expenseList.getDescription()==null || expenseList.getDescription().trim().isEmpty()) {
+
+                    if(binding.titleEt.getText().toString().trim().isEmpty())
+                    {
+                        Toast.makeText(getContext(),"Put title",Toast.LENGTH_SHORT);
+                        return;
+                    }
+                   else if(binding.discrEt.getText().toString().trim().isEmpty())
+                    {
+                        Toast.makeText(getContext(),"Put Description",Toast.LENGTH_SHORT);
+                        return;
+                    }
+                   else {
+                       expenseList.setTitle(binding.titleEt.getText().toString().trim());
+                       expenseList.setDescription(binding.discrEt.getText().toString().trim());
+                    }
+                           EasyUpiPayment.Builder builder = new EasyUpiPayment.Builder(getActivity())
+                                   .setPayeeVpa(vpa)
+                                   .setPayeeName(payeeName)
+                                   .setPayeeMerchantCode("1234")
+                                   .setTransactionId("T" + System.currentTimeMillis())
+                                   .setTransactionRefId("T" + System.currentTimeMillis())
+                                   .setDescription(expenseList.getDescription())
+                                   .setAmount(String.valueOf(expenseList.getTotal()));
+
+                           try {
+                               EasyUpiPayment easyUpiPayment = builder.build();
+                               easyUpiPayment.startPayment();
+                           } catch (AppNotFoundException e) {
+                               Toast.makeText(getContext(), "UPI payment app not found", Toast.LENGTH_SHORT).show();
+                           }
+
+
+
+                }
+
+            }
+
+
+        });
 
         return binding.getRoot();
     }
@@ -327,10 +384,10 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
       binding.payBtn.setClickable(
              (total!=0 &&((itemName==null&& price==0 && quantity==0)
              || itemName!=null && !itemName.trim().isEmpty() && price!=0 && quantity!=0)
-             )
-
-      );
+             ));
     }
+
+
 
 
 }
