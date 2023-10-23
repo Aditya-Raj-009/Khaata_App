@@ -11,11 +11,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.khaata.R;
 import com.example.khaata.TransactionDetailsActivity;
 import com.example.khaata.databinding.DataRecyclerViewBinding;
 import com.example.khaata.entity.ExpenseList;
 
 import java.util.ArrayList;
+
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.DetailsViewHolder>{
     private ArrayList<ExpenseList> expenseLists;
@@ -25,11 +27,16 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Detail
         this.expenseLists = expenseLists;
         this.context = context;
     }
-
+    public void setExpenseLists(ArrayList<ExpenseList> expenseLists)
+    {
+        this.expenseLists = expenseLists;
+        notifyDataSetChanged();
+    }
     @NonNull
     @Override
     public DetailsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        DataRecyclerViewBinding binding = DataRecyclerViewBinding.inflate(LayoutInflater.from(context));
+        DataRecyclerViewBinding binding = DataRecyclerViewBinding.inflate(LayoutInflater.from(context),
+                parent,false);
         return new DetailsViewHolder(binding);
     }
 
@@ -40,8 +47,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Detail
         holder.date.setText(expenseLists.get(position).getTDate());
         holder.totalTranTxt.setText("₹ "+ expenseLists.get(position).getTotal());
         holder.itemView.setOnClickListener(view -> {
-            Intent transactionDetails = new Intent(context, TransactionDetailsActivity.class);
-            transactionDetails.putExtra("TRANSACTION", (Parcelable) expenseLists.get(position));
+//            Intent transactionDetails = new Intent(context, TransactionDetailsActivity.class);
+//            transactionDetails.putExtra("TRANSACTION", (Parcelable) expenseLists.get(position));
         });
 
 
@@ -49,7 +56,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Detail
 
     @Override
     public int getItemCount() {
-        return 0;
+        return expenseLists.size();
     }
 
     public class DetailsViewHolder extends RecyclerView.ViewHolder {

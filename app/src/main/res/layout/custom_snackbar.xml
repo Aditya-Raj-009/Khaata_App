@@ -3,15 +3,25 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:background="@drawable/card_design"
+    android:background="@color/white"
+    android:elevation="12dp"
     android:padding="16dp">
 
     <TextView
         android:id="@+id/snackbar_text"
-        android:layout_width="wrap_content"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/holo_green_dark"
+        android:text="Hello"
+        android:textColor="@color/golden"
         android:textSize="16sp"
         />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/black"
+        android:text="Undo"
+        android:id="@+id/undobtn"
+        android:layout_marginStart="12dp"
+        android:textColor="@color/white"/>
 
 </LinearLayout>

@@ -14,31 +14,37 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TableRow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.khaata.databinding.ActivityMainBinding;
 import com.example.khaata.databinding.BottoSheetDialogBinding;
 import com.example.khaata.entity.ExpenseDetails;
 import com.example.khaata.entity.ExpenseList;
+import com.example.khaata.viewModel.ViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import dev.shreyaspatil.easyupipayment.EasyUpiPayment;
-import dev.shreyaspatil.easyupipayment.exception.AppNotFoundException;
+import java.util.Date;
 
 public class BottomSheetDialog extends BottomSheetDialogFragment {
     private static double total;
-    private static BottoSheetDialogBinding binding;
-    private static ExpenseList expenseList;
-    private static String vpa,payeeName;
-    private static ArrayList<ExpenseDetails> expenseDetailsArrayList;
+    private BottoSheetDialogBinding binding;
+    private ExpenseList expenseList;
+    private  ArrayList<ExpenseDetails> expenseDetailsArrayList;
+    private ViewModel databaseModel;
+    private RecyclerView recyclerView;
+    private ActivityMainBinding mBinding;
 
-
+    public BottomSheetDialog(RecyclerView recyclerView2, ActivityMainBinding mBinding) {
+        this.recyclerView = recyclerView2;
+        this.mBinding = mBinding;
+    }
 
 
     @Nullable
@@ -46,23 +52,23 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = BottoSheetDialogBinding.inflate(getLayoutInflater());
 
-        SharedPreferences preferences = getActivity().getSharedPreferences("PaymentInfo",MODE_PRIVATE);
-        payeeName = preferences.getString("PayeeName",null);
-        vpa = preferences.getString("VPA",null);
 
+        databaseModel = new ViewModel(getActivity().getApplication());
 
         expenseDetailsArrayList = new ArrayList<>();
         expenseList = new ExpenseList();
         expenseList.setExpList(expenseDetailsArrayList);
-        binding.payBtn.setClickable(false);
+
         Toast.makeText(getContext(), total+" "+expenseList.getTotal()+" "+expenseDetailsArrayList.size(), Toast.LENGTH_SHORT).show();
         this.setCancelable(false);
         binding.totalBtn.setText("Total: "+String.format("%.2f",total));
+        
 
         binding.closeBottomSheet.setOnClickListener(view -> {
             total = 0;
-           expenseList.setExpList(null);
+            expenseList.setExpList(null);
             binding.expTable.removeAllViews();
+            Toast.makeText(getContext(), "removed", Toast.LENGTH_SHORT).show();
             dismiss();
         });
 
@@ -71,49 +77,42 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
         });
 
 
-        binding.payBtn.setOnClickListener(view -> {
-            if(vpa!=null && payeeName!=null)
+        binding.saveBtn.setOnClickListener(view -> {
+
+            if(binding.titleEt.getText().toString().trim().isEmpty())
             {
-                if(expenseList.getDescription()==null || expenseList.getDescription().trim().isEmpty()) {
+                Toast.makeText(getContext(), "Put title", Toast.LENGTH_SHORT).show();
+            }
+//            if(binding.discrEt.getText().toString().trim().isEmpty())
+//            {
+//                Toast.makeText(getContext(), "Put description", Toast.LENGTH_SHORT).show();
+//            }
+            else {
+                expenseList.setTitle(binding.titleEt.getText().toString().trim());
+                expenseList.setDescription(binding.discrEt.getText().toString().trim());
+                Date date = new Date();
 
-                    if(binding.titleEt.getText().toString().trim().isEmpty())
-                    {
-                        Toast.makeText(getContext(),"Put title",Toast.LENGTH_SHORT);
-                        return;
-                    }
-                   else if(binding.discrEt.getText().toString().trim().isEmpty())
-                    {
-                        Toast.makeText(getContext(),"Put Description",Toast.LENGTH_SHORT);
-                        return;
-                    }
-                   else {
-                       expenseList.setTitle(binding.titleEt.getText().toString().trim());
-                       expenseList.setDescription(binding.discrEt.getText().toString().trim());
-                    }
-                           EasyUpiPayment.Builder builder = new EasyUpiPayment.Builder(getActivity())
-                                   .setPayeeVpa(vpa)
-                                   .setPayeeName(payeeName)
-                                   .setPayeeMerchantCode("1234")
-                                   .setTransactionId("T" + System.currentTimeMillis())
-                                   .setTransactionRefId("T" + System.currentTimeMillis())
-                                   .setDescription(expenseList.getDescription())
-                                   .setAmount(String.valueOf(expenseList.getTotal()));
-
-                           try {
-                               EasyUpiPayment easyUpiPayment = builder.build();
-                               easyUpiPayment.startPayment();
-                           } catch (AppNotFoundException e) {
-                               Toast.makeText(getContext(), "UPI payment app not found", Toast.LENGTH_SHORT).show();
-                           }
-
-
-
-                }
+                String df = new SimpleDateFormat("dd-MMMM-yyy\nhh:mm:ss a").format(date);
+                expenseList.settDate(df);
+                expenseList.setExpList(expenseDetailsArrayList);
+                databaseModel.InsertExpense(expenseList);
+                MainActivity.lists.add( 0,expenseList);
+                MainActivity.adapter.setExpenseLists(MainActivity.lists);
+                SharedPreferences pf = getActivity().getSharedPreferences("DATA",MODE_PRIVATE);
+                SharedPreferences.Editor edit = pf.edit();
+                MainActivity.total_exp+= expenseList.getTotal();
+                edit.putFloat("total_exp", (float) MainActivity.total_exp);
+                edit.apply();
+                mBinding.totalTxt.setText("₹ "+MainActivity.total_exp);
+                recyclerView.smoothScrollToPosition(0);
+            binding.closeBottomSheet.performClick();
 
             }
 
 
+
         });
+        binding.saveBtn.setClickable(false);
 
         return binding.getRoot();
     }
@@ -125,7 +124,6 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
     private void addRow() {
         ExpenseDetails expenseDetails = new ExpenseDetails();
         final String[] itemName = {null};
-        final double[] quantity = {0};
         final double[] price = { 0 };
         final boolean[] flag = {true};
 
@@ -158,19 +156,19 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
                 {
 
                     expenseList.getExpList().remove(expenseDetails);
-                    if(itemName[0]!=null &&itemName[0].length()!=0 && total>0 && price[0]*quantity[0]<=total) {
-                        total -= (price[0] * quantity[0]);
+                    if(itemName[0]!=null &&itemName[0].length()!=0 && total>0 && total-price[0]<=total) {
+                        total -= price[0];
                     }
                    price[0]=0;
-                    calculate(itemName[0],quantity[0],0,expenseDetails);
-                    payClickable(itemName[0], total,price[0],quantity[0]);
+                    calculate(itemName[0],0,expenseDetails);
+                    saveClickable(itemName[0], total,price[0]);
 
                     return;
 
                 }
                 if(!editable.toString().trim().isEmpty()){
-                    if(itemName[0]!=null && itemName[0].length()!=0 && total>0 && price[0]*quantity[0]<=total) {
-                        total -= (price[0] * quantity[0]);
+                    if(itemName[0]!=null && itemName[0].length()!=0 && total>0 &&total-price[0]<=total) {
+                        total -= price[0];
                     }
                     if(editable.toString().trim().startsWith("."))
                     {
@@ -182,8 +180,8 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
 
 
                 }
-               calculate(itemName[0], quantity[0], price[0],expenseDetails);
-                payClickable(itemName[0], total,price[0],quantity[0]);
+               calculate(itemName[0],price[0],expenseDetails);
+                saveClickable(itemName[0], total,price[0]);
 
             }
         });
@@ -211,7 +209,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
 
                     if(flag[0])
                     {
-                        calculate(itemName[0], quantity[0], price[0],expenseDetails);
+                        calculate(itemName[0], price[0],expenseDetails);
                         flag[0] = false;
 
                     }
@@ -221,19 +219,19 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
                     flag[0]=true;
 
 
-                    if(total>0 && price[0]*quantity[0]<=total && price[0]!=0 && quantity[0]!=0) {
-                        total-=(price[0]*quantity[0]);
-                        calculate(itemName[0], 0, 0,expenseDetails);
+                    if(total>0 && total-price[0]<=total && price[0]!=0) {
+                        total-=price[0];
+                        calculate(itemName[0], 0,expenseDetails);
                     }
                     itemName[0] = "";
                     expenseDetails.setItemName(itemName[0]);
                     Toast.makeText(getContext(), expenseDetails.getItemName()+"", Toast.LENGTH_SHORT).show();
 
-                    calculate(itemName[0], 0, 0,expenseDetails);
+                    calculate(itemName[0], 0, expenseDetails);
 
 
                     }
-                payClickable(itemName[0],total,price[0],quantity[0]);
+                saveClickable(itemName[0],total,price[0]);
                 }
         });
         iQ.addTextChangedListener(new TextWatcher() {
@@ -252,27 +250,14 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
 
                 if(!editable.toString().trim().isEmpty())
                 {
-                    if(itemName[0]!=null &&itemName[0].length()!=0 && total>0 && price[0]*quantity[0]<=total) {
-                        total -= (price[0] * quantity[0]);
-                    }
-                    quantity[0] = Double.parseDouble(editable.toString());
+                   expenseDetails.setItemDesc(editable.toString().trim());
 
 
                 }
                 else{
-                    expenseList.getExpList().remove(expenseDetails);
 
-                    if(itemName[0]!=null && itemName[0].length()!=0 && total>0 && price[0]*quantity[0]<=total) {
-                       total-=(price[0]*quantity[0]);
-
-                    }
-
-                    quantity[0] = 0;
+                    expenseDetails.setItemDesc("-");
                 }
-
-
-                calculate(itemName[0], quantity[0], price[0],expenseDetails);
-                payClickable(itemName[0],total,price[0],quantity[0]);
 
             }
         });
@@ -289,20 +274,20 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
         delete.setOnClickListener(view -> {
             binding.expTable.removeView((View) view.getParent());
 
-            if(total>0 && price[0]*quantity[0]<=total)
+            if(total>0 && total-price[0]<=total)
             {
-                Toast.makeText(getContext(), expenseDetails.getPrice()+" "+expenseDetails.getQuantity()
+                Toast.makeText(getContext(), expenseDetails.getPrice()+" "+expenseDetails.getItemDesc()
                         +"\n"+expenseList.getTotal()+" "+expenseList.getExpList().size(), Toast.LENGTH_SHORT).show();
 
-                total-=(price[0]*quantity[0]);
-                calculate(itemName[0],0,0,expenseDetails);
+                total-=price[0];
+                calculate(itemName[0],0,expenseDetails);
                 expenseDetails.setItemName(null);
                 if(total!=0)
                 {
-                    binding.payBtn.setClickable(true);
+                    binding.saveBtn.setClickable(true);
                 }
                 expenseList.getExpList().remove(expenseDetails);
-                Toast.makeText(getContext(), expenseDetails.getPrice()+" "+expenseDetails.getQuantity()
+                Toast.makeText(getContext(), expenseDetails.getPrice()+" "+expenseDetails.getItemDesc()
                         +"\n"+expenseList.getTotal()+" "+expenseList.getExpList().size(), Toast.LENGTH_SHORT).show();
                 Toast.makeText(getContext(), expenseDetails.getItemName()+"", Toast.LENGTH_SHORT).show();
 
@@ -311,7 +296,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
             }
             if(total==0)
             {
-                payClickable(itemName[0],total,price[0],quantity[0]);
+                saveClickable(itemName[0],total,price[0]);
             }
 
         });
@@ -333,8 +318,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
 
 
         iQ.setBackgroundColor(getResources().getColor(R.color.white));
-        iQ.setHint("Quantity");
-        iQ.setInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        iQ.setHint("ItemDesc");
         iQ.setPadding((int) convertDpToPx(2), (int) convertDpToPx(2), (int) convertDpToPx(2), (int) convertDpToPx(2));
         iQ.setMaxWidth((int) convertDpToPx(100)); // Adjust max width as needed
         iQ.setTextColor(getResources().getColor(R.color.black));
@@ -351,26 +335,25 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
 
     }
 
-    private void calculate(String itemName, double quantity, double price,ExpenseDetails details) {
+    private void calculate(String itemName, double price,ExpenseDetails details) {
 
         if(itemName==null || itemName.trim().isEmpty())
         {
             return;
         }
-        if((int)quantity<Integer.MAX_VALUE && (int)price<Integer.MAX_VALUE&&(int)total<=Integer.MAX_VALUE) {
-            total += (price * quantity);
+        if((int)price<Integer.MAX_VALUE&&(int)total<=Integer.MAX_VALUE) {
+            total += price;
             binding.totalBtn.setText("Total: "+String.format("%.2f",total));
-            binding.payBtn.setText("Pay ₹ "+total);
             details.setPrice(price);
-            details.setQuantity(quantity);
             expenseList.setTotal(total);
-            if(price>0 && quantity>0 && !expenseDetailsArrayList.contains(details)) {
+            if(price>0 && !expenseDetailsArrayList.contains(details)) {
+
                 expenseDetailsArrayList.add(details);
-                payClickable(itemName,total,price,quantity);
+                saveClickable(itemName,total,price);
 
             }
 
-            Toast.makeText(getContext(), details.getPrice()+" "+details.getQuantity()+"\n" +
+            Toast.makeText(getContext(), details.getPrice()+" "+details.getItemDesc()+"\n" +
                     expenseList.getTotal()+" "+expenseList.getExpList().size(), Toast.LENGTH_SHORT).show();
 
         }
@@ -379,11 +362,11 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
 
     }
 
-    private void payClickable(String itemName, double total, double price, double quantity) {
+    public void saveClickable(String itemName, double total, double price) {
 
-      binding.payBtn.setClickable(
-             (total!=0 &&((itemName==null&& price==0 && quantity==0)
-             || itemName!=null && !itemName.trim().isEmpty() && price!=0 && quantity!=0)
+      binding.saveBtn.setClickable(
+             (total!=0 &&((itemName==null&& price==0)
+             || itemName!=null && !itemName.trim().isEmpty() && price!=0)
              ));
     }
 

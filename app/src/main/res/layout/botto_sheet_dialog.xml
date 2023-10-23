@@ -130,7 +130,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Quantity"
+                                android:text="Item Description"
                                 android:textColor="@color/black"
                                 android:textStyle="bold" />
 
@@ -138,7 +138,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Price per qnt"
+                                android:text="Price"
                                 android:textColor="@color/black"
                                 android:textStyle="bold" />
                             <View
@@ -227,9 +227,9 @@
                 <androidx.appcompat.widget.AppCompatButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Pay ₹ 0.0"
+                    android:text="Save"
                     android:textStyle="bold"
-                    android:id="@+id/payBtn"
+                    android:id="@+id/saveBtn"
                     android:textColor="@color/black"
                     android:elevation="20dp"
                     android:background="@drawable/button_bg"

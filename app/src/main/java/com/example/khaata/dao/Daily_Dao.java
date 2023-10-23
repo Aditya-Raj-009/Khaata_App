@@ -21,6 +21,9 @@ public interface Daily_Dao {
     @Delete
     void deleteData(ExpenseList expenseList);
 
-    @Query("SELECT * FROM ExpenseList")
+
+
+    @Query("SELECT * FROM ExpenseList ORDER BY ID DESC")
     List<ExpenseList> getAllExpense();
+
 }

@@ -4,7 +4,7 @@ package com.example.khaata.entity;
 public class ExpenseDetails {
 
     private String itemName;
-    private double quantity;
+    private String ItemDesc="-";
 
     private double price;
 
@@ -17,12 +17,12 @@ public class ExpenseDetails {
     }
 
 
-    public double getQuantity() {
-        return quantity;
+    public String getItemDesc() {
+        return ItemDesc;
     }
 
-    public void setQuantity(double quantity) {
-        this.quantity = quantity;
+    public void setItemDesc(String desc) {
+        this.ItemDesc = desc;
     }
 
     public double getPrice() {

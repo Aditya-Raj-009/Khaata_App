@@ -15,6 +15,9 @@
         android:theme="@style/Theme.Khaata"
         tools:targetApi="31">
         <activity
+            android:name=".TransactionDetailsActivity"
+            android:exported="false" />
+        <activity
             android:name=".PaymentInfoActivity"
             android:exported="false" />
         <activity
@@ -27,11 +30,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".TransactionDetailsActivity"
-            android:exported="false" />
-        <activity
             android:name=".MainActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
     </application>
 
 </manifest>
