@@ -19,7 +19,7 @@ public interface Daily_Dao {
 
 
     @Delete
-    void deleteData(ExpenseList expenseList);
+    int deleteData(ExpenseList expenseList);
 
 
 

@@ -1,37 +1,36 @@
 package com.example.khaata.viewModel;
 
-import android.app.Application;
-import android.os.Looper;
-import android.view.View;
+import android.content.Context;
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
-import androidx.room.Room;
-import androidx.room.RoomDatabase;
 
 import com.example.khaata.DataBASE;
 import com.example.khaata.dao.Daily_Dao;
-import com.example.khaata.entity.ExpenseDetails;
 import com.example.khaata.entity.ExpenseList;
 
 import java.util.ArrayList;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Handler;
 
-public class ViewModel extends AndroidViewModel {
-    private Daily_Dao dao;
-    private DataBASE dataBASE;
-    public ViewModel(@NonNull Application application) {
-        super(application);
-        dataBASE = DataBASE.getInstance(application);
-        dao = dataBASE.getDao();
+public class ViewModel extends androidx.lifecycle.ViewModel {
+    private static Daily_Dao dao;
+    private static DataBASE dataBASE;
+   private static ViewModel instance;
 
-    }
+   public static ViewModel getInstance(Context context)
+   {
+       if(instance==null)
+       {
+           instance = new ViewModelProvider((ViewModelStoreOwner) context).get(ViewModel.class);
+           dataBASE = DataBASE.getInstance(context);
+           dao = dataBASE.getDao();
+
+       }
+       return instance;
+   }
+
 
     MutableLiveData<ArrayList<ExpenseList>> data = new MutableLiveData<>();
 
@@ -43,26 +42,18 @@ public class ViewModel extends AndroidViewModel {
 
         }
 
-        public void DeleteExpense(ExpenseList expenseList)
+        public int DeleteExpense(ExpenseList expenseList)
         {
-            ExecutorService service = Executors.newSingleThreadExecutor();
-           service.execute(new Runnable() {
-               @Override
-               public void run() {
-                   dao.deleteData(expenseList);
-               }
-           });
+
+            return dao.deleteData(expenseList);
         }
 
         public void InsertExpense(ExpenseList expenseList)
         {
-            ExecutorService service = Executors.newSingleThreadExecutor();
-            service.execute(new Runnable() {
-                @Override
-                public void run() {
+
+
                     dao.insertData(expenseList);
-                }
-            });
+
         }
 
 
