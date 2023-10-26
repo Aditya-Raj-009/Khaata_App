@@ -1,5 +1,9 @@
 package com.example.khaata.entity;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -12,7 +16,7 @@ import java.util.ArrayList;
 
 @Entity(tableName = "ExpenseList")
 @TypeConverters(ExpenseDetailsConverter.class)
-public class ExpenseList {
+public class ExpenseList implements Parcelable {
 
     @ColumnInfo(name = "ExpList")
    private ArrayList<ExpenseDetails> expList;
@@ -31,6 +35,26 @@ public class ExpenseList {
 
     @ColumnInfo(name = "Transaction Date")
     private String tDate;
+
+    protected ExpenseList(Parcel in) {
+        id = in.readLong();
+        total = in.readDouble();
+        title = in.readString();
+        description = in.readString();
+        tDate = in.readString();
+    }
+
+    public static final Creator<ExpenseList> CREATOR = new Creator<ExpenseList>() {
+        @Override
+        public ExpenseList createFromParcel(Parcel in) {
+            return new ExpenseList(in);
+        }
+
+        @Override
+        public ExpenseList[] newArray(int size) {
+            return new ExpenseList[size];
+        }
+    };
 
     public String getTDate() {
         return tDate;
@@ -91,5 +115,19 @@ public class ExpenseList {
 
     @Ignore
     public ExpenseList() {
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel parcel, int i) {
+        parcel.writeLong(id);
+        parcel.writeDouble(total);
+        parcel.writeString(title);
+        parcel.writeString(description);
+        parcel.writeString(tDate);
     }
 }

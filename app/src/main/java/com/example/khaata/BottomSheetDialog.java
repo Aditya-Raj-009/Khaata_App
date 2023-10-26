@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,7 +54,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
         binding = BottoSheetDialogBinding.inflate(getLayoutInflater());
 
 
-        databaseModel = new ViewModel(getActivity().getApplication());
+        databaseModel =  ViewModel.getInstance(getContext());
 
         expenseDetailsArrayList = new ArrayList<>();
         expenseList = new ExpenseList();
@@ -68,7 +69,6 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
             total = 0;
             expenseList.setExpList(null);
             binding.expTable.removeAllViews();
-            Toast.makeText(getContext(), "removed", Toast.LENGTH_SHORT).show();
             dismiss();
         });
 
@@ -83,10 +83,6 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
             {
                 Toast.makeText(getContext(), "Put title", Toast.LENGTH_SHORT).show();
             }
-//            if(binding.discrEt.getText().toString().trim().isEmpty())
-//            {
-//                Toast.makeText(getContext(), "Put description", Toast.LENGTH_SHORT).show();
-//            }
             else {
                 expenseList.setTitle(binding.titleEt.getText().toString().trim());
                 expenseList.setDescription(binding.discrEt.getText().toString().trim());
@@ -96,14 +92,14 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
                 expenseList.settDate(df);
                 expenseList.setExpList(expenseDetailsArrayList);
                 databaseModel.InsertExpense(expenseList);
-                MainActivity.lists.add( 0,expenseList);
-                MainActivity.adapter.setExpenseLists(MainActivity.lists);
+
+                MainActivity.getAllData();
                 SharedPreferences pf = getActivity().getSharedPreferences("DATA",MODE_PRIVATE);
                 SharedPreferences.Editor edit = pf.edit();
                 MainActivity.total_exp+= expenseList.getTotal();
                 edit.putFloat("total_exp", (float) MainActivity.total_exp);
                 edit.apply();
-                mBinding.totalTxt.setText("₹ "+MainActivity.total_exp);
+               MainActivity.setTotalExpense();
                 recyclerView.smoothScrollToPosition(0);
             binding.closeBottomSheet.performClick();
 

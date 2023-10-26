@@ -1,18 +1,13 @@
 package com.example.khaata.Adapter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.khaata.R;
-import com.example.khaata.TransactionDetailsActivity;
 import com.example.khaata.databinding.DataRecyclerViewBinding;
 import com.example.khaata.entity.ExpenseList;
 
@@ -20,16 +15,18 @@ import java.util.ArrayList;
 
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.DetailsViewHolder>{
-    private ArrayList<ExpenseList> expenseLists;
+    private ArrayList<ExpenseList> expenseListArrayList;
     private Context context;
+    private ToTransDetails toTransDetails;
 
-    public RecyclerAdapter(ArrayList<ExpenseList> expenseLists, Context context) {
-        this.expenseLists = expenseLists;
+    public RecyclerAdapter(ArrayList<ExpenseList> expenseListArrayList, Context context,ToTransDetails toTransDetails) {
+        this.expenseListArrayList = expenseListArrayList;
         this.context = context;
+        this.toTransDetails = toTransDetails;
     }
     public void setExpenseLists(ArrayList<ExpenseList> expenseLists)
     {
-        this.expenseLists = expenseLists;
+        this.expenseListArrayList = expenseLists;
         notifyDataSetChanged();
     }
     @NonNull
@@ -42,13 +39,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Detail
 
     @Override
     public void onBindViewHolder(@NonNull DetailsViewHolder holder, int position) {
-        holder.title.setText(expenseLists.get(position).getTitle());
-        holder.desc.setText(expenseLists.get(position).getDescription());
-        holder.date.setText(expenseLists.get(position).getTDate());
-        holder.totalTranTxt.setText("₹ "+ expenseLists.get(position).getTotal());
+        holder.title.setText(expenseListArrayList.get(position).getTitle());
+        holder.desc.setText(expenseListArrayList.get(position).getDescription());
+        holder.date.setText(expenseListArrayList.get(position).getTDate());
+        holder.totalTranTxt.setText("₹ "+ expenseListArrayList.get(position).getTotal());
         holder.itemView.setOnClickListener(view -> {
-//            Intent transactionDetails = new Intent(context, TransactionDetailsActivity.class);
-//            transactionDetails.putExtra("TRANSACTION", (Parcelable) expenseLists.get(position));
+            toTransDetails.onClickDetails(expenseListArrayList.get(position));
         });
 
 
@@ -56,7 +52,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Detail
 
     @Override
     public int getItemCount() {
-        return expenseLists.size();
+        return expenseListArrayList.size();
     }
 
     public class DetailsViewHolder extends RecyclerView.ViewHolder {
@@ -70,5 +66,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Detail
             date = binding.dateTxt;
 
         }
+    }
+
+  public interface ToTransDetails{
+       void onClickDetails(ExpenseList expenseList);
     }
 }
