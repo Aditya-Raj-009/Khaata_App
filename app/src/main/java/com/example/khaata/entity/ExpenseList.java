@@ -19,7 +19,7 @@ import java.util.ArrayList;
 public class ExpenseList implements Parcelable {
 
     @ColumnInfo(name = "ExpList")
-   private ArrayList<ExpenseDetails> expList;
+   private ArrayList<ExpenseDetails> expenseDetailsArrayList;
 
     @ColumnInfo(name = "id")
     @PrimaryKey(autoGenerate = true)
@@ -80,8 +80,8 @@ public class ExpenseList implements Parcelable {
         this.description = description;
     }
 
-    public ExpenseList(ArrayList<ExpenseDetails> expList, String tDate, long id, double total,String title,String description) {
-        this.expList = expList;
+    public ExpenseList(ArrayList<ExpenseDetails> expenseDetailsArrayList, String tDate, long id, double total,String title,String description) {
+        this.expenseDetailsArrayList = expenseDetailsArrayList;
         this.id = id;
         this.total = total;
         this.title = title;
@@ -89,12 +89,12 @@ public class ExpenseList implements Parcelable {
         this.description = description;
     }
 
-    public ArrayList<ExpenseDetails> getExpList() {
-        return expList;
+    public ArrayList<ExpenseDetails> getExpenseDetailsArrayList() {
+        return expenseDetailsArrayList;
     }
 
-    public void setExpList(ArrayList<ExpenseDetails> expList) {
-        this.expList = expList;
+    public void setExpenseDetailsArrayList(ArrayList<ExpenseDetails> expenseDetailsArrayList) {
+        this.expenseDetailsArrayList = expenseDetailsArrayList;
     }
 
     public long getId() {

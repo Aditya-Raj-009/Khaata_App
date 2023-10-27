@@ -24,11 +24,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Detail
         this.context = context;
         this.toTransDetails = toTransDetails;
     }
-    public void setExpenseLists(ArrayList<ExpenseList> expenseLists)
-    {
-        this.expenseListArrayList = expenseLists;
-        notifyDataSetChanged();
-    }
+
     @NonNull
     @Override
     public DetailsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -43,9 +39,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Detail
         holder.desc.setText(expenseListArrayList.get(position).getDescription());
         holder.date.setText(expenseListArrayList.get(position).getTDate());
         holder.totalTranTxt.setText("₹ "+ expenseListArrayList.get(position).getTotal());
-        holder.itemView.setOnClickListener(view -> {
-            toTransDetails.onClickDetails(expenseListArrayList.get(position));
-        });
 
 
     }
@@ -64,6 +57,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Detail
             title = binding.titleTxt;
             desc = binding.descTxt;
             date = binding.dateTxt;
+
+            binding.getRoot().setOnClickListener(view -> {
+                toTransDetails.onClickDetails(expenseListArrayList.get(getAdapterPosition()));
+            });
 
         }
     }

@@ -1,5 +1,7 @@
 package com.example.khaata;
 
+import static java.security.AccessController.getContext;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -52,15 +54,14 @@ public class MainActivity extends AppCompatActivity {
         databaseModel = ViewModel.getInstance(this);
         getAllData();
 
+
         databaseModel.getAllData().observe(this, new Observer<ArrayList<ExpenseList>>() {
 
             @Override
             public void onChanged(ArrayList<ExpenseList> expenseLists) {
 
                 adapter.notifyDataSetChanged();
-//                Log.v("lstInfo",lists.get(0).getTitle());
-//                Log.v("lstInfo",lists.get(0).getDescription());
-//                Log.v("lstInfo",lists.get(0).getExpList().get(0).getItemDesc());
+
 
             }
         });
@@ -85,8 +86,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         int position = viewHolder.getAdapterPosition();
-                       int p= databaseModel.DeleteExpense(lists.get(position));
-                        Toast.makeText(MainActivity.this, p+"", Toast.LENGTH_SHORT).show();
+                      databaseModel.DeleteExpense(lists.get(position));
                         total_exp-=lists.get(position).getTotal();
                         SharedPreferences.Editor edit = preferences.edit();
                         edit.putFloat("total_exp", (float) total_exp);
@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
                         lists.remove(position);
                         adapter.notifyItemRemoved(position);
                         setTotalExpense();
+                        addRemovePlaceHolder();
 
 
                     }
@@ -108,6 +109,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }).attachToRecyclerView(binding.recyclerView2);
+
+
 
 
 
@@ -149,7 +152,6 @@ public class MainActivity extends AppCompatActivity {
         {
             total_exp = preferences.getFloat("total_exp",0.0f);
             binding.totalTxt.setText("₹ "+total_exp);
-            Log.v("total",preferences.getFloat("total_exp",0.0f)+"");
 
 
         }
@@ -160,8 +162,10 @@ public class MainActivity extends AppCompatActivity {
         lists = databaseModel.getAllData().getValue();
         adapter = new RecyclerAdapter(lists,context,expenseList -> {
             Intent detailsActivity = new Intent(context, ExpenseDetailsActivity.class);
-            detailsActivity.putExtra("ExpenseDetails",expenseList);
-           context.startActivity(detailsActivity);
+            detailsActivity.putExtra("exList", expenseList);
+            detailsActivity.putParcelableArrayListExtra("exDetails",expenseList.getExpenseDetailsArrayList());
+
+            context.startActivity(detailsActivity);
         });
         binding.recyclerView2.setLayoutManager(new LinearLayoutManager(context));
 
@@ -169,6 +173,18 @@ public class MainActivity extends AppCompatActivity {
         binding.recyclerView2.setHasFixedSize(true);
         adapter.notifyDataSetChanged();
 
+        addRemovePlaceHolder();
 
+
+    }
+    private static void addRemovePlaceHolder()
+    {
+        if(!lists.isEmpty())
+        {
+            binding.noExpTxt.setVisibility(View.GONE);
+        }
+        else{
+            binding.noExpTxt.setVisibility(View.VISIBLE);
+        }
     }
 }
