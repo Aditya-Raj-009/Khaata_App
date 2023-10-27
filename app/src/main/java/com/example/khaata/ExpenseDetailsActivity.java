@@ -29,6 +29,7 @@ public class ExpenseDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityExpenseDetailsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        getWindow().setFlags(1024,1024);
 
         Intent data = getIntent();
         if(data!=null)
