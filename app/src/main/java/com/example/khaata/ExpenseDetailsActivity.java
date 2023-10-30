@@ -5,8 +5,10 @@ import static java.security.AccessController.getContext;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.InputType;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -44,6 +46,16 @@ public class ExpenseDetailsActivity extends AppCompatActivity {
             {
                 createDetailsTable(expenseDetails.getItemName(),expenseDetails.getItemDesc(), (float) expenseDetails.getPrice(),++sr_no+".");
             }
+            TextView total = new TextView(this);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+            total.setLayoutParams(params);
+            total.setPadding((int)convertDpToPx(4),(int) convertDpToPx(4),(int)convertDpToPx(4),(int) convertDpToPx(4));
+            total.setBackgroundColor(getResources().getColor(R.color.black));
+            total.setTextColor(getResources().getColor(R.color.white));
+            total.setText("Total: ₹ "+expenseList.getTotal());
+            total.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            total.setTypeface(null, Typeface.BOLD);
+            binding.detailsTable.addView(total);
         }
 
 
